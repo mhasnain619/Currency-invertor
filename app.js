@@ -195,8 +195,16 @@ const updateFlag = (ele) => {
 
     // const flag = document.getElementById('flag');
 }
+window.addEventListener('load', () => {
+    updateExchangeRate()
+})
 btn.addEventListener('click', async (evt) => {
     evt.preventDefault()
+    updateExchangeRate()
+
+});
+
+const updateExchangeRate = async () => {
     let amount = document.querySelector('.amount input')
     let amountValue = amount.value
     if (amountValue === '' || amountValue < 1) {
@@ -224,7 +232,5 @@ btn.addEventListener('click', async (evt) => {
     } catch (error) {
         console.error('Error fetching conversion rate:', error);
     }
-});
-
-
+}
 
