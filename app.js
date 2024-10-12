@@ -1,7 +1,9 @@
+const baseUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies";
 let dropDowns = document.querySelectorAll('select');
 let btn = document.querySelector('#get-rate')
 let frmCurrency = document.querySelector('.from select')
 let toCurrency = document.querySelector('.to select')
+let msg = document.querySelector('.msg')
 const countryList = {
     AED: "AE",
     AFN: "AF",
@@ -193,66 +195,36 @@ const updateFlag = (ele) => {
 
     // const flag = document.getElementById('flag');
 }
-
 btn.addEventListener('click', async (evt) => {
-    evt.preventDefault();
-    let amount = document.querySelector('.amount input');
-    let amountValue = amount.value;
+    evt.preventDefault()
+    let amount = document.querySelector('.amount input')
+    let amountValue = amount.value
     if (amountValue === '' || amountValue < 1) {
-        amountValue = 1;
-        amount.value = '1';
+        amountValue = 1
+        amount.value = '1'
     }
 
-    let fromCurrencyValue = frmCurrency.value;
-    let toCurrencyValue = toCurrency.value;
+    // Updated URL and fetching method
+    const Url = `${baseUrl}/${frmCurrency.value.toLowerCase()}.json`
+    try {
+        let res = await fetch(Url)
+        let json = await res.json();
 
-    const rate = await getExchangeRate(fromCurrencyValue, toCurrencyValue);
-    if (rate) {
-        const convertedValue = rate * amountValue;
-        console.log(`Exchange rate from ${fromCurrencyValue} to ${toCurrencyValue} is: ${rate}`);
-        console.log(`Converted value: ${convertedValue}`);
-        // You can also display this converted value in your UI
-        document.querySelector('.result').innerText = `Converted Amount: ${convertedValue.toFixed(2)}`;
-    } else {
-        console.log('Unable to fetch exchange rate.');
+
+        // Access the conversion rate from the nested object
+        let rate = json[frmCurrency.value.toLowerCase()][toCurrency.value.toLowerCase()];
+        console.log(rate);
+        let finalAmount = Math.floor(amountValue * rate)
+        msg.innerText = `${amountValue} ${frmCurrency.value} = ${finalAmount} ${toCurrency.value}`
+        console.log(finalAmount);
+
+        // console.log(`Conversion rate from ${frmCurrency.value} to ${toCurrency.value}:`, rate);
+        // You can now use this rate for further calculations (e.g., multiplying by amountValue)
+
+    } catch (error) {
+        console.error('Error fetching conversion rate:', error);
     }
 });
 
-async function getCrossRate(fromCurrency, toCurrency) {
-    const baseCurrency = 'usd';  // Use USD as base
-
-    const fromToBaseRate = await getExchangeRate(fromCurrency, baseCurrency);
-    if (!fromToBaseRate) return null;
-
-    const toToBaseRate = await getExchangeRate(toCurrency, baseCurrency);
-    if (!toToBaseRate) return null;
-
-    return toToBaseRate / fromToBaseRate;  // Cross-rate calculation
-}
-
-// Use getCrossRate when direct rate is unavailable
-
-async function getExchangeRate(fromCurrency, toCurrency) {
-    try {
-        const date = 'latest'; // Using the latest date for the API
-        const response = await fetch(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/${date}/currencies/${fromCurrency}/${toCurrency}.json`);
-        if (!response.ok) {
-            throw new Error(`Exchange rate for ${fromCurrency} to ${toCurrency} not found`);
-        }
-        const data = await response.json();
-        const rate = data[toCurrency];
-        if (!rate) {
-            throw new Error(`No exchange rate available for ${toCurrency}`);
-        }
-        return rate;
-    } catch (error) {
-        console.error('Error fetching exchange rate:', error.message);
-        alert(error.message);  // Notify user
-        return null;  // Return null if the rate is not found
-    }
-}
 
 
-// getExchangeRate('usd', 'eur').then(rate => {
-//     console.log(`Exchange rate from USD to EUR is: ${rate}`);
-// });
