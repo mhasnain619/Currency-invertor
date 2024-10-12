@@ -23,26 +23,18 @@
                 <div class="from">
                     <p>From</p>
                     <div class="select-container">
-                        <img src="https://flagsapi.com/US/flat/64.png" alt="">
-                        <select name="from" id="">
-                            <option value="USD">USD</option>
-                            <option value="PAK">PAK</option>
-                            <option value="INR">INR</option>
-                            <option value="EUR">EUR</option>
+                        <img id="from-flag" src="https://flagsapi.com/US/flat/64.png" alt="">
+                        <select name="from" id="from-currency">
 
                         </select>
                     </div>
                 </div>
                 <i class="fa-solid fa-arrow-right-arrow-left"></i>
                 <div class="to">
-                    <p>TO</p>
+                    <p>To</p>
                     <div class="select-container">
-                        <img src="https://flagsapi.com/PK/flat/64.png" alt="">
-                        <select name="from" id="">
-                            <option value="USD">USD</option>
-                            <option value="PAK" selected>PAK</option>
-                            <option value="INR">INR</option>
-                            <option value="EUR">EUR</option>
+                        <img id="to-flag" src="https://flagsapi.com/PK/flat/64.png" alt="">
+                        <select name="to" id="to-currency">
 
                         </select>
                     </div>
@@ -51,10 +43,10 @@
             <div class="msg">
                 1 USD = 290 PAK
             </div>
-            <button>Get Exchange Rate</button>
+            <button type="button" id="get-rate">Get Exchange Rate</button>
         </form>
     </div>
-    <script src="./app.js"></script>
+    <script src="app.js"></script>
 </body>
 
 </html>
