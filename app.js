@@ -193,7 +193,6 @@ const updateFlag = (ele) => {
     let img = ele.parentElement.querySelector('img')
     img.src = newSrc
 
-    // const flag = document.getElementById('flag');
 }
 window.addEventListener('load', () => {
     updateExchangeRate()
